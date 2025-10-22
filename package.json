@@ -1,0 +1,47 @@
+{
+  "name": "fullstack-template",
+  "private": true,
+  "packageManager": "pnpm@10.18.3",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "prepare": "husky",
+    "setup": "node ./tools/setup.mjs",
+    "dev": "concurrently -n FE,BE -c blue,magenta \"pnpm --filter @budget-tracker/frontend dev\" \"pnpm --filter @budget-tracker/backend start:dev\"",
+    "dev:web": "pnpm --filter @budget-tracker/frontend dev",
+    "dev:api": "pnpm --filter @budget-tracker/backend start:dev",
+    "build": "pnpm -r run build",
+    "build:web": "pnpm --filter @budget-tracker/frontend build",
+    "build:api": "pnpm --filter @budget-tracker/backend build",
+    "lint": "pnpm -r run lint",
+    "test": "pnpm -r run test",
+    "start": "pnpm --filter @budget-tracker/backend start",
+    "format": "prettier --write \"**/*.{ts,js,tsx,jsx,json,md,scss,css,html}\""
+  },
+  "lint-staged": {
+    "*.{ts,js,tsx,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,scss,css,html}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=22 <23",
+    "pnpm": ">=10"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "@types/node": "^20.19.22",
+    "concurrently": "^9.0.1",
+    "eslint-config-prettier": "^9.1.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.5",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3"
+  }
+}
