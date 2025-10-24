@@ -1,10 +1,9 @@
 name = "fullstack-template-backend"
-main = "dist/main.js"
 compatibility_date = "2025-10-25"
 
 [build]
-command = "pnpm build"
-watch_dir = "src"
+command = "pnpm install && pnpm build && pnpm prisma generate"
+entry-point = "dist/main.js"
 
 [env.production]
 name = "fullstack-template-backend-prod"
@@ -14,6 +13,6 @@ vars = { ENVIRONMENT = "production" }
 name = "fullstack-template-backend-staging"
 vars = { ENVIRONMENT = "staging" }
 
-[[env.production.rules]]
+[[rules]]
 type = "ESModule"
 fallthrough = true
