@@ -1,6 +1,7 @@
 name = "fullstack-template-backend"
 main = "dist/main.js"
 compatibility_date = "2025-10-25"
+compatibility_flags = ["nodejs_compat"]
 
 [build]
 command = "pnpm install && pnpm build && pnpm prisma generate"
