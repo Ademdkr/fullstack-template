@@ -1,0 +1,15 @@
+name = "budget-tracker-api"
+main = "src/index.ts"
+compatibility_date = "2025-10-24"
+
+# ENV-Variablen
+[vars]
+# Für Neon-HTTP (empfohlen): sichere URL ohne Pooling-TCP
+DATABASE_URL = ""
+
+# Optional: Hyperdrive nutzen (Cloudflare DB-Proxy)
+# siehe: https://developers.cloudflare.com/hyperdrive/
+# [hyperdrive]
+# bindings = [
+#   { name = "HYPERDRIVE", database = "<your-hyperdrive-name>" }
+# ]

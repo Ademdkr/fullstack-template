@@ -9,23 +9,26 @@
   "scripts": {
     "prepare": "husky",
     "setup": "node ./tools/setup.mjs",
-    "dev": "concurrently -n FE,BE -c blue,magenta \"pnpm --filter @budget-tracker/frontend dev\" \"pnpm --filter @budget-tracker/backend start:dev\"",
-    "dev:web": "pnpm --filter @budget-tracker/frontend dev",
-    "dev:api": "pnpm --filter @budget-tracker/backend start:dev",
+    "dev": "concurrently -n FE,BE -c blue,magenta \"pnpm --filter @template/frontend dev\" \"pnpm --filter @template/backend start:dev\"",
+    "dev:web": "pnpm --filter @template/frontend dev",
+    "dev:api": "pnpm --filter @template/backend start:dev",
     "build": "pnpm -r run build",
-    "build:web": "pnpm --filter @budget-tracker/frontend build",
-    "build:api": "pnpm --filter @budget-tracker/backend build",
+    "build:web": "pnpm --filter @template/frontend build",
+    "build:api": "pnpm --filter @template/backend build",
     "lint": "pnpm -r run lint",
     "test": "pnpm -r run test",
-    "start": "pnpm --filter @budget-tracker/backend start",
-    "format": "prettier --write \"**/*.{ts,js,tsx,jsx,json,md,scss,css,html}\""
+    "start": "pnpm --filter @template/backend start",
+    "format": "prettier --write \"**/*.{ts,js,tsx,jsx,json,md,scss,css,html}\"",
+    "db:up": "docker compose up -d",
+    "db:logs": "docker compose logs -f db",
+    "db:down": "docker compose down",
+    "db:studio": "pnpm --filter @template/backend exec prisma studio"
   },
   "lint-staged": {
-    "*.{ts,js,tsx,jsx}": [
-      "eslint --fix",
-      "prettier --write"
+    "apps/**/{src,prisma}/**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix"
     ],
-    "*.{json,md,scss,css,html}": [
+    "**/*.{json,md,scss,css,html}": [
       "prettier --write"
     ]
   },
@@ -34,14 +37,34 @@
     "pnpm": ">=10"
   },
   "devDependencies": {
+    "@angular-eslint/eslint-plugin": "^20.4.0",
+    "@angular-eslint/eslint-plugin-template": "^20.4.0",
+    "@angular-eslint/template-parser": "^20.4.0",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
+    "@types/joi": "^17.2.3",
     "@types/node": "^20.19.22",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
     "concurrently": "^9.0.1",
+    "dotenv-cli": "^7.4.4",
+    "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.5",
     "prettier": "^3.6.2",
-    "typescript": "^5.9.3"
+    "prisma": "^6.18.0",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.45.0"
+  },
+  "dependencies": {
+    "@cloudflare/workers-types": "^4.20251014.0",
+    "@nestjs/swagger": "^11.2.1",
+    "@prisma/client": "^6.18.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "hono": "^4.10.2",
+    "joi": "^18.0.1",
+    "swagger-ui-express": "^5.0.1"
   }
 }

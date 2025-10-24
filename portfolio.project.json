@@ -1,13 +1,13 @@
 {
-  "slug": "budget-tracker",
-  "title": "Budget Tracker",
+  "slug": "__APP_SLUG__",
+  "title": "__APP_NAME__",
   "summary": "Kurze Beschreibung des Projekts in 1-2 Sätzen.",
   "tech": ["Angular", "NestJS", "PostgreSQL", "Docker"],
-  "repo": "https://github.com/ademdokur/budget-tracker",
-  "demo": "https://budget-tracker.vercel.app",
-  "api": "https://budget-tracker-api.onrender.com",
+  "repo": "https://github.com/__GITHUB_USER__/__APP_SLUG__",
+  "demo": "https://__APP_SLUG__.vercel.app",
+  "api": "https://__APP_SLUG__-api.onrender.com",
   "tags": ["fullstack", "crud", "auth"],
   "status": "draft",
-  "thumbnail": "https://raw.githubusercontent.com/ademdokur/budget-tracker/main/.portfolio/cover.png",
-  "lastUpdated": "2025-10-22"
+  "thumbnail": "https://raw.githubusercontent.com/__GITHUB_USER__/__APP_SLUG__/main/.portfolio/cover.png",
+  "lastUpdated": "__DATE_YYYY_MM_DD__"
 }

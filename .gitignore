@@ -6,6 +6,7 @@ apps/backend/node_modules/
 # Builds
 dist/
 apps/**/dist/
+apps/**/pnpm-lock.yaml
 
 # Angular cache
 .angular/
@@ -18,3 +19,5 @@ apps/**/.env
 .DS_Store
 .idea/
 .vscode/
+
+apps/backend/.env.neon

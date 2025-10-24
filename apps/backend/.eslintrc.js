@@ -1,10 +1,22 @@
+/** @type {import('eslint').Linter.Config} */
+
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: ["./tsconfig.json", "./prisma/tsconfig.json"],
     tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
+  overrides: [
+    // Falls du schon overrides hast, belasse sie – dieser hier ist optional hilfreich:
+    {
+      files: ["prisma/**/*.ts"],
+      parserOptions: {
+        project: ["./prisma/tsconfig.json"],
+        tsconfigRootDir: __dirname,
+      },
+    },
+  ],
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
     'plugin:@typescript-eslint/recommended',

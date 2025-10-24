@@ -80,7 +80,8 @@ const files = [
   'apps/backend/nest-cli.json',
   // (optional) Environments
   'apps/frontend/src/environments/environment.ts',
-  'apps/frontend/src/environments/environment.development.ts'
+  'apps/frontend/src/environments/environment.development.ts',
+  'docker-compose.yml'
 ].map(p => path.join(cwd, p));
 
 for (const f of files) replaceInFile(f, replacements);

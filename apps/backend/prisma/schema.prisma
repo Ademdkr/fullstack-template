@@ -1,0 +1,16 @@
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")         // Runtime (lokal: Docker, prod: Neon pooled)
+  directUrl  = env("DIRECT_DATABASE_URL")  // Migrations (nur prod/Neon nötig)
+}
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+}
+
+model Budget {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+}
