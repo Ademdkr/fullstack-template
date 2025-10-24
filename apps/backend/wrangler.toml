@@ -10,9 +10,17 @@ command = "pnpm install && pnpm build && pnpm prisma generate"
 name = "fullstack-template-backend-prod"
 vars = { ENVIRONMENT = "production" }
 
+[env.production.vars]
+# Diese Variablen werden zur Laufzeit aus den Cloudflare Secrets gelesen
+DATABASE_URL = ""
+
 [env.staging]
 name = "fullstack-template-backend-staging"
 vars = { ENVIRONMENT = "staging" }
+
+[env.staging.vars]
+# Diese Variablen werden zur Laufzeit aus den Cloudflare Secrets gelesen
+DATABASE_URL = ""
 
 [[rules]]
 type = "ESModule"
