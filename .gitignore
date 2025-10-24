@@ -21,3 +21,9 @@ apps/**/.env
 .vscode/
 
 apps/backend/.env.neon
+
+# Wrangler / worker temporary files
+.wrangler/
+.wrangler/*
+.wrangler/tmp/
+.wrangler/tmp/**

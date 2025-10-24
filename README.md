@@ -39,3 +39,35 @@ Ideal für **Portfolio-Projekte**, Prototypen oder professionelle Web-Apps.
 git clone https://github.com/Ademdkr/fullstack-template.git
 cd fullstack-template
 ```
+
+## 📋 Setup
+
+Für eine ausführliche Schritt-für-Schritt-Anleitung zum lokalen Start, zur Datenbank (Docker) und Prisma-Migrationen siehe `docs/SETUP.md`.
+
+## 🧪 Quick Start (copy & paste)
+
+Diese Befehle bringen dich schnell in einen lauffähigen Entwicklungszustand (lokale DB via Docker empfohlen):
+
+```powershell
+# 1) Abhängigkeiten installieren
+pnpm install
+
+# 2) Lokale DB starten (Docker Compose öffnet Postgres auf Port 5433)
+pnpm db:up
+
+# 3) Backend .env vorbereiten
+copy apps\backend\.env.example apps\backend\.env
+# (optional) prüfe/ändere DATABASE_URL in apps/backend/.env
+
+# 4) Prisma generieren/migrieren
+cd apps/backend
+pnpm prisma:migrate
+pnpm prisma:generate
+pnpm prisma:seed
+cd ../..
+
+# 5) Frontend + Backend zusammen starten
+pnpm dev
+```
+
+Hinweis: Frontend-Tests benötigen Chrome/Chromium. In CI werden die Frontend-Tests in einem separaten Job ausgeführt, der Chromium installiert.

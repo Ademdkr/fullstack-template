@@ -6,6 +6,7 @@ module.exports = {
     project: ["./tsconfig.json", "./prisma/tsconfig.json"],
     tsconfigRootDir: __dirname,
     sourceType: 'module',
+    createDefaultProgram: true,
   },
   overrides: [
     // Falls du schon overrides hast, belasse sie – dieser hier ist optional hilfreich:
