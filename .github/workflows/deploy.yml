@@ -29,10 +29,15 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
+        run: pnpm install
 
       - name: Generate Prisma Client
-        run: pnpm --filter @budget-tracker/backend prisma:generate
+        run: pnpm --filter @budget-tracker/backend exec prisma generate
+
+      - name: Build Backend (Test)
+        run: pnpm --filter @budget-tracker/backend build
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Deploy Database Changes
         working-directory: apps/backend
@@ -57,7 +62,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
+        run: pnpm install
 
       - name: Build Frontend
         run: pnpm --filter @budget-tracker/frontend build
@@ -86,7 +91,10 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
+        run: pnpm install
+
+      - name: Test Worker Build
+        run: pnpm --filter @budget-tracker/worker build
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
