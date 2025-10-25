@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    /* ---------- Allgemeine Einstellungen ---------- */
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": ["ES2022", "DOM"],
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* ---------- Typdefinitionen ---------- */
+    "types": ["node"],
+    "skipLibCheck": true,
+
+    /* ---------- Decorators & Metadata (NestJS / Angular) ---------- */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    /* ---------- Strenge Typisierung ---------- */
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* ---------- Sonstiges ---------- */
+    "sourceMap": true
+  },
+
+  "exclude": ["node_modules", "dist"]
+}
