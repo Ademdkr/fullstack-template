@@ -1,16 +1,15 @@
 name: Deploy
 
-# ⚠️ TEMPLATE NOTICE:
-# This workflow is disabled by default in the template.
-# After cloning, uncomment the 'push' trigger and add your secrets:
-# - CLOUDFLARE_API_TOKEN
-# - CLOUDFLARE_ACCOUNT_ID
-# - DATABASE_URL
-# See DEPLOYMENT.md for setup instructions.
+# Budget Tracker Deployment
+# Deploys the application to Cloudflare Pages (Frontend), Workers (API), and manages database migrations
+# Requires secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, DATABASE_URL
 
 on:
+  # Automatic deployment on push to main (uncomment when ready)
   # push:
   #   branches: [main]
+  
+  # Manual deployment trigger
   workflow_dispatch:
 
 jobs:
@@ -33,7 +32,7 @@ jobs:
         run: pnpm install --ignore-scripts
 
       - name: Generate Prisma Client
-        run: pnpm --filter @template/backend prisma:generate
+        run: pnpm --filter @budget-tracker/backend prisma:generate
 
       - name: Deploy Database Changes
         working-directory: apps/backend
@@ -60,14 +59,14 @@ jobs:
         run: pnpm install --ignore-scripts
 
       - name: Build Frontend
-        run: pnpm --filter @template/frontend build
+        run: pnpm --filter @budget-tracker/frontend build
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: __APP_SLUG__-frontend
+          projectName: budget-tracker-frontend
           directory: apps/frontend/dist/apps/frontend
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
@@ -91,7 +90,7 @@ jobs:
         run: pnpm install --ignore-scripts
 
       - name: Generate Prisma Client for Worker
-        run: pnpm --filter @template/worker prisma:generate
+        run: pnpm --filter @budget-tracker/worker prisma:generate
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
