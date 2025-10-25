@@ -31,8 +31,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Setup Database URL for Prisma
+        run: echo "DATABASE_URL=postgresql://dummy:dummy@dummy:5432/dummy" >> $GITHUB_ENV
+
       - name: Generate Prisma Client
-        run: pnpm --filter @budget-tracker/backend exec prisma generate
+        working-directory: apps/backend
+        run: |
+          pnpm exec prisma generate
+          echo "Prisma client generated, checking..."
+          ls -la ../../node_modules/.pnpm/@prisma+client*/node_modules/@prisma/client/ || echo "Client not found in expected location"
 
       - name: Build Backend (Test)
         run: pnpm --filter @budget-tracker/backend build
