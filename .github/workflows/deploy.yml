@@ -3,12 +3,16 @@ name: Deploy
 on:
   push:
     branches: [main]
-  workflow_dispatch:
 
 jobs:
   deploy-frontend:
     runs-on: ubuntu-latest
     name: Deploy Frontend to Cloudflare Pages
+    if: ${{ github.event_name == 'push' }}
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
@@ -24,16 +28,22 @@ jobs:
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ env.CF_API_TOKEN }}
+          accountId: ${{ env.CF_ACCOUNT_ID }}
           projectName: fullstack-template-frontend
           directory: apps/frontend/dist/apps/frontend
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          gitHubToken: ${{ env.GITHUB_TOKEN }}
 
   deploy-backend:
     runs-on: ubuntu-latest
     name: Deploy Backend to Cloudflare Workers
+    # Temporär deaktiviert: NestJS-Backend kann nicht ohne Anpassung auf Cloudflare Workers gebaut werden.
+    # Setze auf 'if: false' bis Strategie geklärt/Refactor durchgeführt ist.
+    if: false
     needs: [deploy-database]
+    if: ${{ github.event_name == 'push' }}
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
@@ -51,15 +61,16 @@ jobs:
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: ${{ env.CF_API_TOKEN }}
           workingDirectory: 'apps/backend'
           command: deploy --env production
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
   deploy-worker:
     runs-on: ubuntu-latest
     name: Deploy Worker to Cloudflare Workers
+    if: ${{ github.event_name == 'push' }}
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
@@ -73,13 +84,14 @@ jobs:
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: ${{ env.CF_API_TOKEN }}
           workingDirectory: 'apps/worker'
           command: deploy --env production
 
   deploy-database:
     runs-on: ubuntu-latest
     name: Deploy Database to Neon
+    if: ${{ github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v3
