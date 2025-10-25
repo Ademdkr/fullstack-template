@@ -2,7 +2,7 @@ name: CD Pipeline
 
 # Budget Tracker Continuous Deployment Pipeline
 # Deploys the application to Cloudflare Pages (Frontend), Workers (API), and manages database migrations
-# Requires secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, DATABASE_URL
+# Requires secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, DATABASE_URL, DIRECT_DATABASE_URL
 
 on:
   # Automatic deployment on push to main
