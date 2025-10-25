@@ -31,18 +31,38 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Setup Database URL for Prisma
-        run: echo "DATABASE_URL=postgresql://dummy:dummy@dummy:5432/dummy" >> $GITHUB_ENV
+      - name: Create .env file for Prisma
+        run: |
+          cd apps/backend
+          echo "DATABASE_URL=postgresql://dummy:dummy@dummy:5432/dummy" > .env
+          echo "DIRECT_DATABASE_URL=postgresql://dummy:dummy@dummy:5432/dummy" >> .env
 
-      - name: Generate Prisma Client
+      - name: Generate Prisma Client with full debug
         working-directory: apps/backend
         run: |
-          pnpm exec prisma generate
-          echo "Prisma client generated, checking..."
-          ls -la ../../node_modules/.pnpm/@prisma+client*/node_modules/@prisma/client/ || echo "Client not found in expected location"
+          echo "Current directory: $(pwd)"
+          echo "Schema location: $(ls -la prisma/schema.prisma)"
+          pnpm exec prisma generate --schema=./prisma/schema.prisma
+          echo "Checking generated client..."
+          find ../../node_modules -name "@prisma" -type d 2>/dev/null || echo "Prisma client not found"
+          
+      - name: Force install Prisma Client
+        working-directory: apps/backend  
+        run: |
+          pnpm add @prisma/client
+          pnpm exec prisma generate --schema=./prisma/schema.prisma
 
+      - name: Verify Prisma types
+        working-directory: apps/backend
+        run: |
+          echo "Checking if @prisma/client can be imported..."
+          node -e "console.log('Prisma client test:'); const { PrismaClient } = require('@prisma/client'); console.log('PrismaClient imported successfully');"
+          
       - name: Build Backend (Test)
-        run: pnpm --filter @budget-tracker/backend build
+        working-directory: apps/backend
+        run: |
+          echo "Starting backend build..."
+          pnpm build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
