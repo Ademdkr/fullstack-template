@@ -1,6 +1,6 @@
-name: Deploy
+name: CD Pipeline
 
-# Budget Tracker Deployment
+# Budget Tracker Continuous Deployment Pipeline
 # Deploys the application to Cloudflare Pages (Frontend), Workers (API), and manages database migrations
 # Requires secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, DATABASE_URL
 
@@ -8,7 +8,7 @@ on:
   # Automatic deployment on push to main
   push:
     branches: [main]
-  
+
   # Manual deployment trigger
   workflow_dispatch:
 
@@ -33,7 +33,7 @@ jobs:
 
       - name: Setup Environment for Database Operations
         run: echo "DATABASE_URL setup for migrations only"
-          
+
       - name: Build Backend (Test)
         working-directory: apps/backend
         run: |
