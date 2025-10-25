@@ -9,8 +9,68 @@ datasource db {
   directUrl  = env("DIRECT_DATABASE_URL")
 }
 
+// Budget Model - Haupteintrag für Budgets
 model Budget {
-  id        String   @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  totalAmount Float    @default(0)
+  spent       Float    @default(0)
+  currency    String   @default("EUR")
+  startDate   DateTime @default(now())
+  endDate     DateTime?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationen
+  categories  Category[]
+  transactions Transaction[]
+  
+  @@map("budgets")
+}
+
+// Kategorie Model für Budget-Kategorisierung
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String?  // Hex color code für UI
+  icon        String?  // Icon name oder emoji
+  budgetLimit Float?   // Limit für diese Kategorie
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relationen
+  budgetId     String
+  budget       Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  
+  @@map("categories")
+}
+
+// Transaction Model für Ein- und Ausgaben
+model Transaction {
+  id          String      @id @default(cuid())
+  title       String
+  description String?
+  amount      Float
+  type        TransactionType
+  date        DateTime    @default(now())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relationen
+  budgetId    String
+  budget      Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  
+  @@map("transactions")
+}
+
+// Enum für Transaction-Typen
+enum TransactionType {
+  INCOME    // Einnahmen
+  EXPENSE   // Ausgaben
 }

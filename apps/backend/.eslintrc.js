@@ -3,7 +3,7 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: ["./tsconfig.json", "./prisma/tsconfig.json"],
+    project: ['./tsconfig.json', './prisma/tsconfig.json'],
     tsconfigRootDir: __dirname,
     sourceType: 'module',
     createDefaultProgram: true,
@@ -11,9 +11,9 @@ module.exports = {
   overrides: [
     // Falls du schon overrides hast, belasse sie – dieser hier ist optional hilfreich:
     {
-      files: ["prisma/**/*.ts"],
+      files: ['prisma/**/*.ts'],
       parserOptions: {
-        project: ["./prisma/tsconfig.json"],
+        project: ['./prisma/tsconfig.json'],
         tsconfigRootDir: __dirname,
       },
     },
@@ -22,7 +22,7 @@ module.exports = {
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended', // falls vorhanden
-    'prettier'                      // mindestens dieser Eintrag sollte vorhanden sein
+    'prettier', // mindestens dieser Eintrag sollte vorhanden sein
   ],
   root: true,
   env: {

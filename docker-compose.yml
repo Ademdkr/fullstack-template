@@ -2,14 +2,14 @@ services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: __DB_USER__
-      POSTGRES_PASSWORD: __DB_PASSWORD__
-      POSTGRES_DB: __DB_NAME__
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: budget-tracker
     ports:
-      - "5433:5432"
+      - "5434:5432"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d __DB_NAME__"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d budget-tracker"]
       interval: 5s
       timeout: 3s
       retries: 20

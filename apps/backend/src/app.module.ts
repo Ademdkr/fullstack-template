@@ -3,6 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { HealthModule } from './health/health.module';
 import { BudgetsModule } from './budgets/budgets.module';
+import { CategoriesModule } from './categories/categories.module';
+import { TransactionsModule } from './transactions/transactions.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -17,7 +19,9 @@ import * as Joi from 'joi';
     }),
     PrismaModule,
     HealthModule,
-    BudgetsModule, // <- neu
+    BudgetsModule,
+    CategoriesModule,
+    TransactionsModule, // <- neu
   ],
 })
 export class AppModule {}
