@@ -194,9 +194,39 @@ Der Worker wird automatisch beim ersten Deploy erstellt.
    - **Pooled connection** → `DATABASE_URL` Secret
    - **Direct connection** → `DIRECT_DATABASE_URL` Secret
 
-### 4. Deploy ausführen
+### 4. CI/CD Workflows aktivieren
 
-Push zu `main` Branch löst automatisch Deployment aus:
+Das Template enthält zwei Workflows:
+
+#### ✅ CI Workflow (`ci.yml`) - Bereits aktiv
+
+- Läuft automatisch bei jedem Push/PR
+- Führt Build, Lint und Tests aus
+- **Keine Secrets benötigt**
+- Sollte im Template-Repo bereits grün sein
+
+#### ⚠️ Deploy Workflow (`deploy.yml`) - Manuell aktivieren
+
+Der Deploy-Workflow ist im Template **deaktiviert** (auskommentiert), um Fehler zu vermeiden.
+
+**So aktivierst du ihn nach dem Setup:**
+
+1. Öffne `.github/workflows/deploy.yml`
+2. Entferne die Kommentare bei den Push-Triggern:
+   ```yaml
+   on:
+     push: # ← Kommentare entfernen
+       branches: [main]
+     workflow_dispatch:
+   ```
+3. Stelle sicher, dass alle Secrets konfiguriert sind (siehe oben)
+4. Commit und push die Änderungen
+
+**Bis dahin**: Nutze `workflow_dispatch` für manuelle Deployments über GitHub Actions UI.
+
+### 5. Deploy ausführen
+
+Push zu `main` Branch löst automatisch Deployment aus (nachdem Deploy-Workflow aktiviert):
 
 ```bash
 git add .
