@@ -1,13 +1,13 @@
 {
-  "slug": "test-project",
-  "title": "Test Project",
+  "slug": "__APP_SLUG__",
+  "title": "__APP_NAME__",
   "summary": "Kurze Beschreibung des Projekts in 1-2 Sätzen.",
   "tech": ["Angular", "NestJS", "PostgreSQL", "Docker"],
-  "repo": "https://github.com/testuser/test-project",
-  "demo": "https://test-project.vercel.app",
-  "api": "https://test-project-api.onrender.com",
+  "repo": "https://github.com/__GITHUB_USER__/__GITHUB_REPO__",
+  "demo": "https://__APP_SLUG__.vercel.app",
+  "api": "https://__APP_SLUG__-api.onrender.com",
   "tags": ["fullstack", "crud", "auth"],
   "status": "draft",
-  "thumbnail": "https://raw.githubusercontent.com/testuser/test-project/main/.portfolio/cover.png",
+  "thumbnail": "https://raw.githubusercontent.com/__GITHUB_USER__/__GITHUB_REPO__/main/.portfolio/cover.png",
   "lastUpdated": "2025-10-25"
 }

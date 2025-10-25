@@ -1,4 +1,4 @@
-name = "test-project-worker"
+name = "__APP_SLUG__-worker"
 main = "dist/index.js"
 compatibility_date = "2025-10-25"
 compatibility_flags = ["nodejs_compat"]
@@ -7,11 +7,11 @@ compatibility_flags = ["nodejs_compat"]
 ENVIRONMENT = "development"
 
 [env.production]
-name = "test-project-worker-prod"
+name = "__APP_SLUG__-worker-prod"
 vars = { ENVIRONMENT = "production" }
 
 [env.staging]
-name = "test-project-worker-staging"
+name = "__APP_SLUG__-worker-staging"
 vars = { ENVIRONMENT = "staging" }
 
 # Optional: Hyperdrive für DB-Proxy nutzen (Cloudflare)

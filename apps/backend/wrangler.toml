@@ -1,4 +1,4 @@
-name = "test-project-backend"
+name = "__APP_SLUG__-backend"
 main = "dist/main.js"
 compatibility_date = "2025-10-25"
 compatibility_flags = ["nodejs_compat"]
@@ -7,9 +7,9 @@ compatibility_flags = ["nodejs_compat"]
 command = "pnpm install && pnpm build && pnpm prisma:generate"
 
 [env.production]
-name = "test-project-backend-prod"
+name = "__APP_SLUG__-backend-prod"
 vars = { ENVIRONMENT = "production" }
 
 [env.staging]
-name = "test-project-backend-staging"
+name = "__APP_SLUG__-backend-staging"
 vars = { ENVIRONMENT = "staging" }
