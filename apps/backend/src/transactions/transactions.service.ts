@@ -4,7 +4,9 @@ import { UpdateTransactionDto } from './dto/update-transaction.dto';
 
 @Injectable()
 export class TransactionsService {
-  create(_createTransactionDto: CreateTransactionDto) {
+  create(createTransactionDto: CreateTransactionDto) {
+    // TODO: Implement transaction creation with Prisma
+    console.log('Creating transaction:', createTransactionDto);
     return 'This action adds a new transaction';
   }
 
@@ -16,7 +18,9 @@ export class TransactionsService {
     return `This action returns a #${id} transaction`;
   }
 
-  update(id: number, _updateTransactionDto: UpdateTransactionDto) {
+  update(id: number, updateTransactionDto: UpdateTransactionDto) {
+    // TODO: Implement transaction update with Prisma
+    console.log('Updating transaction:', id, updateTransactionDto);
     return `This action updates a #${id} transaction`;
   }
 

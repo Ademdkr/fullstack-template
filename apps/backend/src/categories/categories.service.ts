@@ -4,7 +4,9 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoriesService {
-  create(_createCategoryDto: CreateCategoryDto) {
+  create(createCategoryDto: CreateCategoryDto) {
+    // TODO: Implement category creation with Prisma
+    console.log('Creating category:', createCategoryDto);
     return 'This action adds a new category';
   }
 
@@ -16,7 +18,9 @@ export class CategoriesService {
     return `This action returns a #${id} category`;
   }
 
-  update(id: number, _updateCategoryDto: UpdateCategoryDto) {
+  update(id: number, updateCategoryDto: UpdateCategoryDto) {
+    // TODO: Implement category update with Prisma
+    console.log('Updating category:', id, updateCategoryDto);
     return `This action updates a #${id} category`;
   }
 
