@@ -1,12 +1,21 @@
-name = "budget-tracker-api"
-main = "src/index.ts"
-compatibility_date = "2025-10-24"
+name = "test-project-worker"
+main = "dist/index.js"
+compatibility_date = "2025-10-25"
+compatibility_flags = ["nodejs_compat"]
 
 [vars]
-DATABASE_URL = ""
+ENVIRONMENT = "development"
 
-# Optional: Hyperdrive nutzen (Cloudflare DB-Proxy)
-# siehe: https://developers.cloudflare.com/hyperdrive/
+[env.production]
+name = "test-project-worker-prod"
+vars = { ENVIRONMENT = "production" }
+
+[env.staging]
+name = "test-project-worker-staging"
+vars = { ENVIRONMENT = "staging" }
+
+# Optional: Hyperdrive für DB-Proxy nutzen (Cloudflare)
+# Siehe: https://developers.cloudflare.com/hyperdrive/
 # [hyperdrive]
 # bindings = [
 #   { name = "HYPERDRIVE", database = "<your-hyperdrive-name>" }

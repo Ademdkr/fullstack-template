@@ -3,107 +3,119 @@ name: Deploy
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
-  deploy-frontend:
-    runs-on: ubuntu-latest
-    name: Deploy Frontend to Cloudflare Pages
-    if: ${{ github.event_name == 'push' }}
-    env:
-      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-      - run: pnpm install
-      - name: Build Frontend
-        run: pnpm --filter @template/frontend build
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ env.CF_API_TOKEN }}
-          accountId: ${{ env.CF_ACCOUNT_ID }}
-          projectName: fullstack-template-frontend
-          directory: apps/frontend/dist/apps/frontend
-          gitHubToken: ${{ env.GITHUB_TOKEN }}
-
-  deploy-backend:
-    runs-on: ubuntu-latest
-    name: Deploy Backend to Cloudflare Workers
-    # Temporär deaktiviert: NestJS-Backend kann nicht ohne Anpassung auf Cloudflare Workers gebaut werden.
-    # Setze auf 'if: false' bis Strategie geklärt/Refactor durchgeführt ist.
-    if: false
-    needs: [deploy-database]
-    if: ${{ github.event_name == 'push' }}
-    env:
-      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-      - run: pnpm install
-      - name: Build Backend
-        run: |
-          pnpm --filter @template/backend build
-          pnpm --filter @template/backend prisma generate
-      - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ env.CF_API_TOKEN }}
-          workingDirectory: 'apps/backend'
-          command: deploy --env production
-
-  deploy-worker:
-    runs-on: ubuntu-latest
-    name: Deploy Worker to Cloudflare Workers
-    if: ${{ github.event_name == 'push' }}
-    env:
-      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-      - run: pnpm install
-      - name: Deploy to Cloudflare Workers
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ env.CF_API_TOKEN }}
-          workingDirectory: 'apps/worker'
-          command: deploy --env production
-
   deploy-database:
     runs-on: ubuntu-latest
-    name: Deploy Database to Neon
-    if: ${{ github.event_name == 'push' }}
+    name: Deploy Database Migrations
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
           version: 10
-      - uses: actions/setup-node@v4
+          
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
           cache: 'pnpm'
-      - run: pnpm install
+          
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts
+        
+      - name: Generate Prisma Client
+        run: pnpm --filter @template/backend prisma:generate
+        
       - name: Deploy Database Changes
         working-directory: apps/backend
         run: pnpm prisma migrate deploy
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    name: Deploy Frontend to Cloudflare Pages
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts
+        
+      - name: Build Frontend
+        run: pnpm --filter @template/frontend build
+        
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: __APP_SLUG__-frontend
+          directory: apps/frontend/dist/apps/frontend
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-worker:
+    runs-on: ubuntu-latest
+    name: Deploy Worker to Cloudflare Workers
+    needs: [deploy-database]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          
+      - name: Install dependencies
+        run: pnpm install --ignore-scripts
+        
+      - name: Generate Prisma Client for Worker
+        run: pnpm --filter @template/worker prisma:generate
+        
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: 'apps/worker'
+          command: deploy --env production
+
+  # Optional: Backend Deployment
+  # Hinweis: NestJS läuft nicht nativ auf Cloudflare Workers.
+  # Für Backend-Deployment sollte eine alternative Plattform gewählt werden:
+  # - Railway (https://railway.app) - Einfache Node.js Deployments
+  # - Render (https://render.com) - Free Tier verfügbar
+  # - Fly.io (https://fly.io) - Gute Performance
+  # - Vercel (mit Next.js API Routes) - Serverless Functions
+  # 
+  # Beispiel für Railway:
+  # deploy-backend:
+  #   runs-on: ubuntu-latest
+  #   name: Deploy Backend to Railway
+  #   needs: [deploy-database]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Install Railway CLI
+  #       run: npm install -g @railway/cli
+  #     - name: Deploy to Railway
+  #       run: railway up
+  #       env:
+  #         RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
+    "build": "echo 'Worker builds via wrangler, no separate build needed'",
     "deploy": "wrangler deploy",
     "prisma:generate": "prisma generate"
   },

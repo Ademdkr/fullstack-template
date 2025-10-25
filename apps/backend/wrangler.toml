@@ -1,28 +1,15 @@
-name = "fullstack-template-backend"
+name = "test-project-backend"
 main = "dist/main.js"
 compatibility_date = "2025-10-25"
 compatibility_flags = ["nodejs_compat"]
 
 [build]
-command = "pnpm install && pnpm build && pnpm prisma generate"
+command = "pnpm install && pnpm build && pnpm prisma:generate"
 
 [env.production]
-name = "fullstack-template-backend-prod"
+name = "test-project-backend-prod"
 vars = { ENVIRONMENT = "production" }
 
-[env.production.vars]
-# Diese Variablen werden zur Laufzeit aus den Cloudflare Secrets gelesen
-DATABASE_URL = ""
-
 [env.staging]
-name = "fullstack-template-backend-staging"
+name = "test-project-backend-staging"
 vars = { ENVIRONMENT = "staging" }
-
-[env.staging.vars]
-# Diese Variablen werden zur Laufzeit aus den Cloudflare Secrets gelesen
-DATABASE_URL = ""
-
-[[rules]]
-type = "ESModule"
-globs = ["**/*.js"]
-fallthrough = true

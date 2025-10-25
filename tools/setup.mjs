@@ -58,7 +58,8 @@ const replacements = {
   '__DATE_YYYY_MM_DD__': DATE,
   // Scope @template/* -> @<slug>/*
   '@template/frontend': `@${APP_SLUG}/frontend`,
-  '@template/backend': `@${APP_SLUG}/backend`
+  '@template/backend': `@${APP_SLUG}/backend`,
+  '@template/worker': `@${APP_SLUG}/worker`
 };
 
 // ---- Ziel-Dateien gezielt ersetzen
@@ -66,18 +67,26 @@ const files = [
   // Root
   'package.json',
   '.env.example',
+  '.env',
   'portfolio.project.json',
   // Frontend
   'apps/frontend/package.json',
+  'apps/frontend/.env.example',
   'apps/frontend/proxy.conf.json',
   'apps/frontend/tsconfig.json',
   'apps/frontend/tsconfig.app.json',
   'apps/frontend/tsconfig.spec.json',
   // Backend
   'apps/backend/package.json',
+  'apps/backend/.env.example',
   'apps/backend/tsconfig.json',
   'apps/backend/tsconfig.build.json',
   'apps/backend/nest-cli.json',
+  'apps/backend/wrangler.toml',
+  // Worker
+  'apps/worker/package.json',
+  'apps/worker/.env.example',
+  'apps/worker/wrangler.toml',
   // (optional) Environments
   'apps/frontend/src/environments/environment.ts',
   'apps/frontend/src/environments/environment.development.ts',
