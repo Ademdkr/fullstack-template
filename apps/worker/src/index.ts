@@ -1,42 +1,43 @@
 import { Hono } from 'hono';
-// ⬇️ explizit aus dem lokalen node_modules des Workers importieren
-import { PrismaClient } from '@prisma/client';
-import { PrismaNeonHTTP } from '@prisma/adapter-neon';
+import { neon } from '@neondatabase/serverless';
 
 type Env = { DATABASE_URL: string };
-
-let prisma: PrismaClient | undefined;
 
 export default {
   fetch: async (req: Request, env: Env, ctx: ExecutionContext) => {
     const app = new Hono<{ Bindings: Env }>();
-
-    if (!prisma) {
-      const adapter = new PrismaNeonHTTP(env.DATABASE_URL, {});
-      prisma = new PrismaClient({ adapter });
-    }
+    const sql = neon(env.DATABASE_URL);
 
     app.get('/', (c) => c.text('OK'));
     app.get('/api/health', (c) => c.json({ status: 'ok', ts: new Date().toISOString() }));
 
     app.get('/api/budgets', async (c) => {
-      const rows = await prisma!.budget.findMany({ orderBy: { createdAt: 'desc' } });
+      const rows = await sql`SELECT * FROM "Budget" ORDER BY "createdAt" DESC`;
       return c.json(rows);
     });
     app.post('/api/budgets', async (c) => {
       const body = await c.req.json<{ name: string }>();
-      const created = await prisma!.budget.create({ data: { name: body.name } });
-      return c.json(created, 201);
+      const created = await sql`
+        INSERT INTO "Budget" (id, name, "totalAmount", spent, "createdAt", "updatedAt") 
+        VALUES (gen_random_uuid(), ${body.name}, 0, 0, NOW(), NOW()) 
+        RETURNING *
+      `;
+      return c.json(created[0], 201);
     });
     app.patch('/api/budgets/:id', async (c) => {
       const { id } = c.req.param();
       const body = await c.req.json<{ name: string }>();
-      const updated = await prisma!.budget.update({ where: { id }, data: { name: body.name } });
-      return c.json(updated);
+      const updated = await sql`
+        UPDATE "Budget" 
+        SET name = ${body.name}, "updatedAt" = NOW() 
+        WHERE id = ${id} 
+        RETURNING *
+      `;
+      return c.json(updated[0]);
     });
     app.delete('/api/budgets/:id', async (c) => {
       const { id } = c.req.param();
-      await prisma!.budget.delete({ where: { id } });
+      await sql`DELETE FROM "Budget" WHERE id = ${id}`;
       return c.json({ ok: true });
     });
 
