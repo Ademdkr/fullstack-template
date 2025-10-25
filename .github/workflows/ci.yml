@@ -64,4 +64,4 @@ jobs:
           sudo apt-get install -y chromium-browser
 
       - name: Run frontend tests
-        run: pnpm --filter @template/frontend test -- --watch=false --browsers=ChromeHeadless
+        run: pnpm --filter @template/frontend test
