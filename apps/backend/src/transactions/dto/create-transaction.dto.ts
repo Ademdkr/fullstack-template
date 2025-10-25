@@ -15,17 +15,17 @@ export enum TransactionType {
 export class CreateTransactionDto {
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title!: string;
 
   @IsOptional()
   @IsString()
   description?: string;
 
   @IsNumber()
-  amount: number;
+  amount!: number;
 
   @IsEnum(TransactionType)
-  type: TransactionType;
+  type!: TransactionType;
 
   @IsOptional()
   @IsDateString()
@@ -33,7 +33,7 @@ export class CreateTransactionDto {
 
   @IsString()
   @IsNotEmpty()
-  budgetId: string;
+  budgetId!: string;
 
   @IsOptional()
   @IsString()
