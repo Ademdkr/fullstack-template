@@ -1,0 +1,15 @@
+name = "test-project-backend"
+main = "dist/main.js"
+compatibility_date = "2025-10-25"
+compatibility_flags = ["nodejs_compat"]
+
+[build]
+command = "pnpm install && pnpm build && pnpm prisma:generate"
+
+[env.production]
+name = "test-project-backend-prod"
+vars = { ENVIRONMENT = "production" }
+
+[env.staging]
+name = "test-project-backend-staging"
+vars = { ENVIRONMENT = "staging" }

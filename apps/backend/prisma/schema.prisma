@@ -1,12 +1,12 @@
-datasource db {
-  provider   = "postgresql"
-  url        = env("DATABASE_URL")         // Runtime (lokal: Docker, prod: Neon pooled)
-  directUrl  = env("DIRECT_DATABASE_URL")  // Migrations (nur prod/Neon nötig)
-}
-
 generator client {
   provider   = "prisma-client-js"
-  engineType = "binary"
+  engineType = "library"   // Pflicht für Workers/Edge
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_DATABASE_URL")
 }
 
 model Budget {

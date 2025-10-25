@@ -4,12 +4,12 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: budget-tracker
+      POSTGRES_DB: test-project
     ports:
       - "5433:5432"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d budget-tracker"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d test-project"]
       interval: 5s
       timeout: 3s
       retries: 20

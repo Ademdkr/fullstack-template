@@ -1,29 +1,71 @@
 name: CI
+
 on:
-  push: { branches: [main] }
+  push:
+    branches: [main, develop]
   pull_request:
+    branches: [main, develop]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
-      - uses: actions/setup-node@v4
+      - name: Install dependencies (ignore postinstall scripts)
+        run: pnpm install --ignore-scripts
+
+      - name: Generate Prisma clients
+        run: pnpm --filter @template/backend prisma:generate && pnpm --filter @template/worker prisma:generate
+
+      - name: Lint
+        run: pnpm -r lint
+
+      - name: Build (all)
+        run: pnpm -r build
+
+      - name: Run tests (backend + unit)
+        run: pnpm --filter @template/backend test && pnpm -r test --filter '!@template/frontend'
+
+  frontend-tests:
+    name: Frontend Tests (Headless)
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'pnpm'
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.18.3
-          run_install: true
+      - name: Install dependencies (ignore postinstall scripts)
+        run: pnpm install --ignore-scripts
 
-      - name: Lint
-        run: pnpm lint
+      - name: Install Chromium for Headless Tests
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
 
-      - name: Test
-        run: pnpm test
-
-      - name: Build
-        run: pnpm build
+      - name: Run frontend tests
+        run: pnpm --filter @template/frontend test -- --watch=false --browsers=ChromeHeadless
