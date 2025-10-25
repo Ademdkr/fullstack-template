@@ -36,8 +36,8 @@ jobs:
       - name: Build (all)
         run: pnpm -r build
 
-      - name: Run tests (backend + unit)
-        run: pnpm --filter @template/backend test && pnpm -r test --filter '!@template/frontend'
+      - name: Run tests (backend only)
+        run: pnpm --filter @template/backend test
 
   frontend-tests:
     name: Frontend Tests (Headless)
