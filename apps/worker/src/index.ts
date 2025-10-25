@@ -1,15 +1,23 @@
 import { Hono } from 'hono';
 import { neon } from '@neondatabase/serverless';
 
-type Env = { DATABASE_URL: string };
+type Env = { 
+  DATABASE_URL: string;
+  ENVIRONMENT?: string;
+};
 
 export default {
   fetch: async (req: Request, env: Env, ctx: ExecutionContext) => {
     const app = new Hono<{ Bindings: Env }>();
     const sql = neon(env.DATABASE_URL);
 
-    app.get('/', (c) => c.text('OK'));
-    app.get('/api/health', (c) => c.json({ status: 'ok', ts: new Date().toISOString() }));
+    app.get('/', (c) => c.text('Budget Tracker API - Running!'));
+    app.get('/api/health', (c) => c.json({ 
+      status: 'ok', 
+      service: 'Budget Tracker API',
+      ts: new Date().toISOString(),
+      environment: env.ENVIRONMENT || 'production'
+    }));
 
     app.get('/api/budgets', async (c) => {
       const rows = await sql`SELECT * FROM "Budget" ORDER BY "createdAt" DESC`;
