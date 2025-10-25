@@ -6,10 +6,6 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 ENVIRONMENT = "production"
 
-[env.staging]
-name = "budget-tracker-worker-staging"
-vars = { ENVIRONMENT = "staging" }
-
 # Optional: Hyperdrive für DB-Proxy nutzen (Cloudflare)
 # Siehe: https://developers.cloudflare.com/hyperdrive/
 # [hyperdrive]
